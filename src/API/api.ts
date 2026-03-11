@@ -19,7 +19,9 @@ export async function fetchRandomRecipes(): Promise<RecipeSummary[]> {
 
 // Hämtar detaljerad information om ett specifikt recept via dess ID
 export async function fetchRecipeById(id: number): Promise<RecipeDetail> {
-  const response = await fetch(`${BASE_URL}/recipes/${id}?apiKey=${API_KEY}`);
+  const response = await fetch(
+    `${BASE_URL}/recipes/${id}/information?apiKey=${API_KEY}`,
+  );
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);

@@ -13,7 +13,9 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
         styles.card,
         pressed && { transform: [{ scale: 0.97 }] },
       ]}
-      onPress={() => router.push(`/recipe/${recipe.id}`)}
+      onPress={() => {
+        router.push(`/recipe/${recipe.id}`);
+      }}
     >
       {/* Bild täcker övre delen av kortet */}
       <Image source={{ uri: recipe.image }} style={styles.image} />
