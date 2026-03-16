@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  View,
+  StyleSheet,
+} from "react-native";
 import { fetchRandomRecipes } from "../../src/API/api";
 import { RecipeSummary } from "../../src/models/Recipe";
 import RecipeCard from "../../src/components/RecipeCard";
+import { colors } from "../../src/ui/colors";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function HomeScreen() {
   const [recipes, setRecipes] = useState<RecipeSummary[]>([]);
@@ -35,19 +43,63 @@ export default function HomeScreen() {
   // Visar felmeddelande om något gick fel
   if (error) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={styles.centered}>
         <Text>Något gick fel: {error}</Text>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <FlatList
-        data={recipes}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <RecipeCard recipe={item} />}
-      />
+    <View style={styles.container}>
+      {/* Header med gradient */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Vad blir det till middag? 🍽️</Text>
+        <Text style={styles.headerSubtitle}>Dagens förslag</Text>
+      </View>
+
+      {/* Receptlista */}
+      <view style={styles.list}>
+        <FlatList
+          data={recipes}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <RecipeCard recipe={item} />}
+        />
+      </view>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  header: {
+    padding: 20,
+    paddingTop: 48,
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: colors.white,
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: colors.white,
+    marginTop: 4,
+    opacity: 0.8,
+  },
+  list: {
+    backgroundColor: colors.white,
+    borderRadius: 16,
+    margin: 16,
+    padding: 16,
+  },
+});

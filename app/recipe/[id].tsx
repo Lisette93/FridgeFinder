@@ -1,11 +1,13 @@
 import { useLocalSearchParams } from "expo-router";
-import { Text, View } from "react-native";
+import { Text, View, Image, StyleSheet, ScrollView } from "react-native";
 import { fetchRecipeById } from "../../src/API/api";
 import { useEffect, useState } from "react";
 import { RecipeDetail } from "../../src/models/Recipe";
 import { ActivityIndicator } from "react-native";
+import { colors } from "../../src/ui/colors";
 
 export default function RecipeDetailScreen() {
+  // Hämtar ID från URL:en, t.ex. /recipe/663931 → id = "663931"
   const { id } = useLocalSearchParams<{ id: string }>();
   const [recipe, setRecipes] = useState<RecipeDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -28,8 +30,8 @@ export default function RecipeDetailScreen() {
   // Visar en spinner medan data hämtas
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -37,24 +39,77 @@ export default function RecipeDetailScreen() {
   // Visar felmeddelande om något gick fel
   if (error) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={styles.centered}>
         <Text>Något gick fel: {error}</Text>
       </View>
     );
   }
 
+  if (!recipe) {
+    return (
+      <View style={styles.centered}>
+        <Text>Receptet hittades inte</Text>
+      </View>
+    );
+  }
+
   return (
-    <View style={{ flex: 1, backgroundColor: "#b8d475" }}>
-      <Text
-        style={{
-          color: "#fff",
-          fontSize: 16,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        Recept ID: {id}
-      </Text>
-    </View>
+    <ScrollView style={styles.container}>
+      {/* Bild täcker övre delen av kortet */}
+      <Image source={{ uri: recipe.image }} style={styles.image} />
+
+      {/* Info-sektion under bilden */}
+      <View style={styles.info}>
+        <Text style={styles.title}>{recipe.title}</Text>
+        <Text style={styles.time}>⏱ {recipe.readyInMinutes} min</Text>
+        <Text style={styles.title}>Ingredienser:</Text>
+        {/* Loopar igenom ingredienslistan och visar varje ingrediens */}
+        {recipe.extendedIngredients.map((ing) => (
+          <Text key={ing.id} style={styles.ingridients}>
+            • {ing.original}
+          </Text>
+        ))}
+        <Text style={styles.title}>Instruktioner:</Text>
+        <Text style={styles.instructions}>{recipe.instructions}</Text>
+      </View>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: {
+    width: "100%",
+    height: 180,
+  },
+  info: {
+    padding: 12,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  time: {
+    fontSize: 13,
+    color: "#888",
+  },
+  ingridients: {
+    fontSize: 14,
+    color: "#555",
+    marginTop: 8,
+  },
+  instructions: {
+    fontSize: 14,
+    color: "#555",
+    marginTop: 8,
+  },
+});

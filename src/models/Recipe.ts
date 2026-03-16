@@ -40,4 +40,5 @@ export interface RecipeDetail extends RecipeSummary {
   healthScore: number;
   pricePerServing: number;
   extendedIngredients: Ingredient[];
+  instructions: string;
 }
