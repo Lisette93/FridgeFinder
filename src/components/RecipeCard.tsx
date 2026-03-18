@@ -2,6 +2,9 @@ import { Pressable, StyleSheet, Text, View, Image } from "react-native";
 import { router } from "expo-router";
 import { RecipeSummary } from "../models/Recipe";
 import { colors } from "../ui/colors";
+import { LinearGradient } from "expo-linear-gradient";
+
+import Feather from "@expo/vector-icons/Feather";
 
 // Definierar vilken data komponenten tar emot som prop
 interface RecipeCardProps {
@@ -10,53 +13,82 @@ interface RecipeCardProps {
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {
   return (
-    <View style={styles.shadow}>
-      <Pressable
-        style={({ pressed }) => [
-          styles.card,
-          // Krymper kortet lite när man trycker
-          pressed && { transform: [{ scale: 0.97 }] },
-        ]}
-        // Navigerar till detaljvyn med receptets ID
-        onPress={() => {
-          router.push(`/recipe/${recipe.id}`);
-        }}
-      >
-        {/* Bild täcker övre delen av kortet */}
+    <Pressable
+      style={({ pressed }) => [
+        styles.card,
+        // Krymper kortet lite när man trycker
+        pressed && { transform: [{ scale: 0.97 }] },
+      ]}
+      // Navigerar till detaljvyn med receptets ID
+      onPress={() => {
+        router.push(`/recipe/${recipe.id}`);
+      }}
+    >
+      {/* Bild täcker övre delen av kortet */}
+      <View style={styles.imageContainer}>
         <Image source={{ uri: recipe.image }} style={styles.image} />
+        <LinearGradient
+          colors={["transparent", colors.secondary]}
+          style={styles.gradient}
+        />
+        {/* Hjärta i hörnet */}
+        <Pressable style={styles.favoriteButton}>
+          <Feather name="heart" size={20} color={colors.white} />
+        </Pressable>
+      </View>
 
-        {/* Info-sektion under bilden */}
-        <View style={styles.info}>
-          <Text style={styles.title}>{recipe.title}</Text>
+      {/* Info-sektion under bilden */}
+      <View style={styles.info}>
+        <Text style={styles.title}>{recipe.title}</Text>
+        <View style={{ flexDirection: "row", gap: 12 }}>
           <Text style={styles.time}>⏱ {recipe.readyInMinutes} min</Text>
+          <Text style={styles.time}>🍽️ {recipe.servings} portioner</Text>
         </View>
-      </Pressable>
-    </View>
+      </View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  shadow: {
-    borderRadius: 16,
+  card: {
+    backgroundColor: colors.secondary,
+    borderRadius: 40,
     margin: 16,
     shadowColor: "#000",
     elevation: 3,
-    backgroundColor: colors.white,
-  },
-  card: {
-    backgroundColor: colors.secondary,
-    borderRadius: 16,
-    margin: 16,
     gap: 12,
   },
+  favoriteButton: {
+    position: "absolute",
+    top: 12,
+    right: 12,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    borderRadius: 20,
+    padding: 6,
+  },
+  imageContainer: {
+    position: "relative",
+  },
   image: {
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
     width: "100%",
-    height: 180,
+    height: 100,
+  },
+  gradient: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
   },
   info: {
-    padding: 12,
+    backgroundColor: colors.white + "BF",
+    borderRadius: 40,
+    margin: 12,
+    padding: 16,
   },
   title: {
     fontSize: 16,

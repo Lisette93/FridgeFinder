@@ -26,6 +26,7 @@ export interface RecipeSummary {
   image: string;
   imageType: string;
   readyInMinutes: number;
+  servings: number;
 }
 
 // Ett fullständigt recept med all detaljinfo, får alla fält från RecipeSummary + sina egen info

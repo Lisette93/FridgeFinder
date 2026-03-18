@@ -50,7 +50,6 @@ export async function fetchSearchRecipes(
 export async function fetchByIngredients(
   // En array av ingredienser som användaren har, t.ex. ["tomato", "cheese", "basil"]
   ingredients: string[],
-  // Antal recept att hämta, default är 10
 ): Promise<RecipeSummary[]> {
   // gör om listan till en sträng där ingredienserna är separerade med kommatecken, t.ex. "tomato,cheese,basil"
   const ingredientString: string = ingredients.join(",");

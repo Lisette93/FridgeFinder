@@ -10,7 +10,7 @@ import { fetchRandomRecipes } from "../../src/API/api";
 import { RecipeSummary } from "../../src/models/Recipe";
 import RecipeCard from "../../src/components/RecipeCard";
 import { colors } from "../../src/ui/colors";
-import { LinearGradient } from "expo-linear-gradient";
+import { typography } from "../../src/ui/typography";
 
 export default function HomeScreen() {
   const [recipes, setRecipes] = useState<RecipeSummary[]>([]);
@@ -51,20 +51,20 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header med gradient */}
+      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Vad blir det till middag? 🍽️</Text>
-        <Text style={styles.headerSubtitle}>Dagens förslag</Text>
+        <Text style={typography.title}>Vad blir det till middag?</Text>
+        <Text style={typography.subtitle}>Dagens förslag</Text>
       </View>
 
       {/* Receptlista */}
-      <view style={styles.list}>
+      <View style={styles.list}>
         <FlatList
           data={recipes}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <RecipeCard recipe={item} />}
         />
-      </view>
+      </View>
     </View>
   );
 }
@@ -72,7 +72,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.primary,
   },
   centered: {
     flex: 1,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
-    paddingTop: 48,
+    paddingTop: 60,
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
   },
@@ -97,9 +97,10 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   list: {
+    flex: 1,
     backgroundColor: colors.white,
-    borderRadius: 16,
-    margin: 16,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
     padding: 16,
   },
 });

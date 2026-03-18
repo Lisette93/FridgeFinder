@@ -4,51 +4,64 @@ import { fetchByIngredients } from "../../src/API/api";
 import { FlatList, Text } from "react-native";
 import { RecipeSummary } from "../../src/models/Recipe";
 import RecipeCard from "../../src/components/RecipeCard";
+import { colors } from "../../src/ui/colors";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function search() {
+export default function Search() {
   const [text, onChangeText] = React.useState("");
-  const [recipes, setRecipes] = React.useState<RecipeSummary[]>([]); // ← ny, för att spara resultaten
+  const [recipes, setRecipes] = React.useState<RecipeSummary[]>([]); // State för att lagra sökresultaten
 
   async function handleSearch() {
-    const ingredients = text.split(","); // "chicken,cream" → ["chicken", "cream"]
+    const ingredients = text.split(",");
     const results = await fetchByIngredients(ingredients);
     setRecipes(results);
   }
 
   return (
-    <View>
-      <TextInput
-        style={styles.input}
-        onChangeText={onChangeText}
-        value={text}
-        placeholder="Sök på ingridienser..."
-      />
+    <SafeAreaView>
+      <View style={styles.container}>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeText}
+          value={text}
+          placeholder="Sök på ingridienser..."
+        />
 
-      <Pressable onPress={handleSearch} style={styles.button}>
-        <Text>Sök</Text>
-      </Pressable>
+        <Pressable onPress={handleSearch} style={styles.button}>
+          <Text>Sök</Text>
+        </Pressable>
 
-      {/* Här kan du rendera recepten som finns i recipes */}
-      <FlatList
-        data={recipes}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <RecipeCard recipe={item} />}
-      />
-    </View>
+        {/* FlatList för att visa sökresultaten */}
+        <FlatList
+          data={recipes}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <RecipeCard recipe={item} />}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: colors.background,
+  },
   input: {
+    borderRadius: 40,
     height: 40,
     margin: 12,
     borderWidth: 1,
     padding: 10,
   },
   button: {
-    backgroundColor: "green",
-    padding: 10,
+    backgroundColor: colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+    color: colors.white,
+    padding: 12,
     margin: 12,
-    borderRadius: 8,
+    borderRadius: 40,
   },
 });
