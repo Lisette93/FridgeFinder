@@ -14,6 +14,7 @@ import { typography } from "../../src/ui/typography";
 
 export default function HomeScreen() {
   const [recipes, setRecipes] = useState<RecipeSummary[]>([]);
+  // spinner börjar som true eftersom appen laddar direkt när skärmen visas
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,7 +32,7 @@ export default function HomeScreen() {
       });
   }, []);
 
-  // Visar en spinner medan data hämtas
+  // Om appen fortfarande laddar, visa en spinner
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -60,7 +61,7 @@ export default function HomeScreen() {
       {/* Receptlista */}
       <View style={styles.list}>
         <FlatList
-          data={recipes}
+          data={recipes} // recept från state
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <RecipeCard recipe={item} />}
         />
@@ -84,17 +85,6 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: colors.white,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    color: colors.white,
-    marginTop: 4,
-    opacity: 0.8,
   },
   list: {
     flex: 1,

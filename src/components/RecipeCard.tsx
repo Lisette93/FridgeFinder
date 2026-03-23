@@ -6,7 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import Feather from "@expo/vector-icons/Feather";
 
-// Definierar vilken data komponenten tar emot som prop
+// // Beskriver exakt vilken data RecipeCard kräver för att fungera
 interface RecipeCardProps {
   recipe: RecipeSummary; // Tar emot ett recept som prop
 }
@@ -31,10 +31,10 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
           colors={["transparent", colors.secondary]}
           style={styles.gradient}
         />
-        {/* Hjärta i hörnet */}
-        <Pressable style={styles.favoriteButton}>
+        {/* Hjärta i hörnet, utan funktion just nu */}
+        <View style={styles.favoriteButton}>
           <Feather name="heart" size={20} color={colors.white} />
-        </Pressable>
+        </View>
       </View>
 
       {/* Info-sektion under bilden */}

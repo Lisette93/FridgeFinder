@@ -31,15 +31,12 @@ export interface RecipeSummary {
 
 // Ett fullständigt recept med all detaljinfo, får alla fält från RecipeSummary + sina egen info
 export interface RecipeDetail extends RecipeSummary {
-  readyInMinutes: number;
-  servings: number;
   sourceUrl: string;
   vegetarian: boolean;
   vegan: boolean;
   glutenFree: boolean;
   dairyFree: boolean;
   healthScore: number;
-  pricePerServing: number;
   extendedIngredients: Ingredient[];
   instructions: string;
 }

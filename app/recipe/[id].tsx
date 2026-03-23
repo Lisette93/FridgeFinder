@@ -1,20 +1,26 @@
 import { useLocalSearchParams } from "expo-router";
-import { Text, View, Image, StyleSheet, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import { fetchRecipeById } from "../../src/API/api";
 import { useEffect, useState } from "react";
 import { RecipeDetail } from "../../src/models/Recipe";
-import { ActivityIndicator } from "react-native";
 import { colors } from "../../src/ui/colors";
 
 export default function RecipeDetailScreen() {
   // Hämtar ID från URL:en, t.ex. /recipe/663931 → id = "663931"
   const { id } = useLocalSearchParams<{ id: string }>();
+  //null istället för en tom array, eftersom det är ett enskilt recept och inte en lista.
   const [recipe, setRecipes] = useState<RecipeDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Hämtar recept när komponenten laddas
     fetchRecipeById(Number(id))
       .then((data) => {
         setRecipes(data);
@@ -25,7 +31,7 @@ export default function RecipeDetailScreen() {
       .finally(() => {
         setLoading(false);
       });
-  }, [id]);
+  }, [id]); // [id] betyder att useEffect körs om varje gång id ändras
 
   // Visar en spinner medan data hämtas
   if (loading) {
@@ -45,6 +51,7 @@ export default function RecipeDetailScreen() {
     );
   }
 
+  // TypeScript kräver en null check, kollar att recipe faktiskt finns
   if (!recipe) {
     return (
       <View style={styles.centered}>
@@ -62,10 +69,11 @@ export default function RecipeDetailScreen() {
       <View style={styles.info}>
         <Text style={styles.title}>{recipe.title}</Text>
         <Text style={styles.time}>⏱ {recipe.readyInMinutes} min</Text>
+
         <Text style={styles.title}>Ingredienser:</Text>
         {/* Loopar igenom ingredienslistan och visar varje ingrediens */}
         {recipe.extendedIngredients.map((ing) => (
-          <Text key={ing.id} style={styles.ingridients}>
+          <Text key={ing.id} style={styles.ingredients}>
             • {ing.original}
           </Text>
         ))}
@@ -100,16 +108,16 @@ const styles = StyleSheet.create({
   },
   time: {
     fontSize: 13,
-    color: "#888",
+    color: colors.textSecondary,
   },
-  ingridients: {
+  ingredients: {
     fontSize: 14,
-    color: "#555",
+    color: colors.textPrimary,
     marginTop: 8,
   },
   instructions: {
     fontSize: 14,
-    color: "#555",
+    color: colors.textPrimary,
     marginTop: 8,
   },
 });
